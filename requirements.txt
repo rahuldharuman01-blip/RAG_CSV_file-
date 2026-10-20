@@ -1,0 +1,10 @@
+flask
+flask-cors
+sqlalchemy
+requests
+numpy
+chromadb
+pymysql          
+langchain_community
+langchain_core
+langchain_text_splitter

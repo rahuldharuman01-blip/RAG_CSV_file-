@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#edf2fa"><title>NeuraSpace — CSV RAG Assistant</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+<div class="space-bg"></div>
+<aside class="sidebar">
+  <a class="brand" href="/"><span class="logo">N</span><span><strong>NeuraSpace</strong><small>CSV intelligence</small></span></a>
+  <div class="workspace-badge"><span class="pulse-dot"></span> PRIVATE WORKSPACE</div>
+  <nav class="nav-list">
+    <button class="nav-item active" data-view="workspace"><span>⌂</span> RAG Workspace</button>
+    <button class="nav-item" data-view="explorer"><span>⌁</span> Data Explorer</button>
+    <button class="nav-item" data-view="retrieval"><span>◎</span> Retrieval</button>
+    <button class="nav-item" data-view="knowledge"><span>▱</span> Knowledge Base</button>
+  </nav>
+  <div class="sidebar-engine"><div class="eyebrow">LOCAL ENGINE</div><div class="engine-line"><span id="engineDot" class="status-dot offline"></span><div><strong>Ollama · Mistral</strong><small id="engineLabel">Checking connection…</small></div></div></div>
+  <div class="sidebar-footer"><div class="avatar">R</div><div><strong>RAG Workspace</strong><small>Private session · Local AI</small></div><span class="footer-dots">•••</span></div>
+</aside>
+<main class="main">
+<header class="topbar">
+  <div class="page-heading"><div class="eyebrow">SPATIAL INTELLIGENCE</div><h1>CSV <span class="gradient-text">RAG</span> Workspace</h1><p class="subtitle">Explore your data and ask questions using your local AI.</p></div>
+  <div class="topbar-actions"><div class="model-status"><span id="modelDot" class="status-dot offline"></span><span id="modelStatus">Checking Ollama…</span></div><button id="themeBtn" class="icon-btn" aria-label="Switch theme" title="Switch theme">☾</button><div class="mini-avatar">RD</div></div>
+</header>
+<section class="view active-view" id="view-workspace">
+  <section class="panel data-pulse">
+    <div class="panel-topline"><div><div class="eyebrow">WORKSPACE TELEMETRY</div><h2>Data Pulse</h2></div><span id="indexBadge" class="badge neutral">Awaiting CSV</span></div>
+    <div class="pulse-grid">
+      <div class="pulse-item"><span class="pulse-label">ROWS</span><strong id="rowsStat">—</strong><small>Records detected</small></div>
+      <div class="pulse-item"><span class="pulse-label">COLUMNS</span><strong id="colsStat">—</strong><small>Fields detected</small></div>
+      <div class="pulse-item file-pulse"><span class="pulse-label">FILE</span><strong id="fileStat">No file uploaded</strong><small id="fileSubtext">Upload a CSV to begin</small></div>
+      <div class="pulse-item index-pulse"><span class="pulse-label">KNOWLEDGE INDEX</span><strong id="indexStatus">Waiting for CSV</strong><div class="index-track"><span id="indexBar"></span></div></div>
+    </div><p id="pulseMessage" class="pulse-message">Your data stays on this computer while using the local Ollama model.</p>
+  </section>
+  <div class="workspace-grid">
+    <section class="panel upload-panel">
+      <div class="panel-kicker">01 · DATA SOURCE</div><div class="panel-title-row"><div><h2>Bring your data</h2><p class="muted">Upload a CSV file to create your searchable knowledge base.</p></div><span class="title-icon">↥</span></div>
+      <label id="dropZone" class="drop-zone" for="fileInput"><span class="upload-symbol">↑</span><strong>Drop your CSV here</strong><span>or click to browse your computer</span><small>CSV format · Maximum 50 MB</small><input id="fileInput" type="file" accept=".csv,text/csv"></label>
+      <div class="upload-actions"><span id="selectedFile" class="selected-file">No file selected</span><button id="uploadBtn" class="primary-btn" type="button" disabled>Upload & index <span>→</span></button></div>
+      <div id="uploadMessage" class="inline-message" role="status"></div>
+      <div class="privacy-note"><span>◇</span><span><strong>Local-first processing</strong><small>Questions use your local Ollama service, not a hosted AI API.</small></span></div>
+    </section>
+    <section class="panel chat-panel">
+      <div class="chat-header"><div><div class="panel-kicker">02 · ASK YOUR DATA</div><h2>Talk to <span class="gradient-text">Mistral</span></h2><p class="muted">Ask questions in plain language.</p></div><span class="model-chip"><span class="status-dot"></span>Mistral</span></div>
+      <div id="chatMessages" class="chat-messages" aria-live="polite"><div class="welcome-card" id="welcomeCard"><div class="welcome-orb">✧</div><h3>Your data, in conversation.</h3><p>Upload a CSV, then choose a quick question or type your own.</p></div></div>
+      <div id="quickQuestions" class="quick-questions"><div class="quick-heading">QUICK QUESTIONS</div>
+        <button class="quick-question" data-question="What columns are available?" disabled>⌗ What columns are available?</button>
+        <button class="quick-question" data-question="Summarize this dataset" disabled>✧ Summarize this dataset</button>
+        <button class="quick-question" data-question="How many records are in this dataset?" disabled>▤ How many records?</button>
+        <button class="quick-question" data-question="Show an example record" disabled>◉ Show an example record</button>
+        <button class="quick-question" data-question="What information does this dataset contain?" disabled>⌕ What does this data contain?</button>
+      </div>
+      <form id="chatForm" class="chat-form"><input id="questionInput" placeholder="Upload a CSV to start asking…" autocomplete="off" maxlength="2000" disabled><button id="sendBtn" type="submit" aria-label="Send question" disabled>↑</button></form>
+      <div class="chat-foot">Answers are grounded in your uploaded CSV. Verify important conclusions.</div>
+    </section>
+  </div>
+</section>
+<section class="view" id="view-explorer" hidden><div class="section-header"><div><div class="eyebrow">INSPECT YOUR SOURCE</div><h2>Data Explorer</h2><p class="muted">Preview rows and search visible values.</p></div></div><section class="panel section-panel"><div class="table-toolbar"><div><strong id="previewTitle">CSV preview</strong><p id="previewCaption" class="muted">Upload a CSV to inspect its contents.</p></div><input id="tableSearch" type="search" placeholder="Search preview…" disabled></div><div id="tableWrap" class="table-wrap"><div class="empty-state">Your CSV preview will appear here after upload.</div></div></section></section>
+<section class="view" id="view-retrieval" hidden><div class="section-header"><div><div class="eyebrow">SEMANTIC SEARCH</div><h2>Retrieval</h2><p class="muted">Inspect snippets used to support the latest AI answer.</p></div></div><section class="panel section-panel"><div id="sourcesPanel" class="sources-panel"><div class="empty-state">Ask a question to view retrieved source records.</div></div></section></section>
+<section class="view" id="view-knowledge" hidden><div class="section-header"><div><div class="eyebrow">INDEX OVERVIEW</div><h2>Knowledge Base</h2><p class="muted">Review the current dataset and index status.</p></div></div><div class="knowledge-grid"><section class="panel"><div class="panel-kicker">CURRENT SOURCE</div><h2 id="knowledgeFilename">No CSV loaded</h2><div class="knowledge-stats"><div><span>Rows</span><strong id="knowledgeRows">—</strong></div><div><span>Columns</span><strong id="knowledgeColumns">—</strong></div></div><h3>Available columns</h3><div id="knowledgeColumnsList" class="column-chips"><span class="muted">Upload a CSV to list columns.</span></div></section><section class="panel"><div class="panel-kicker">LOCAL MODELS</div><h2>AI engine status</h2><div class="model-row"><span>Chat model</span><strong id="chatModelName">mistral:latest</strong></div><div class="model-row"><span>Embedding model</span><strong id="embeddingModelName">nomic-embed-text</strong></div><div class="model-row"><span>Ollama connection</span><strong id="ollamaState">Checking…</strong></div><p class="muted">Install both models in Ollama for semantic question answering.</p></section></div></section>
+<footer class="page-footer">Designed & Devloped By Rahul Dharuman <br> NEURASPACE <span>·</span> PRIVATE CSV INTELLIGENCE <span>·</span> LOCAL AI</footer>
+</main><div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body></html>
